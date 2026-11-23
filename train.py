@@ -1,3 +1,4 @@
+#train.py
 #STEP 1:Import libraries
 
 import pandas as pd
@@ -28,15 +29,15 @@ X = pd.DataFrame(
 )
 y = pd.Series(data.target,name="target")
 
-print("Dataset shape:",X.shape)
+print("Dataset shape:", X.shape)
 print("\nFirst 5 rows:")
 print(X.head())
 
-print("\nTarget values;")
+print("\nTarget values:")
 print(y.value_counts())
 
 #STEP 3:Split dataset
-X_train,X_test,y_train,y_test = train_test_split(
+X_train, X_test, y_train, y_test = train_test_split(
   X,
   y,
   test_size=0.20,
@@ -44,8 +45,8 @@ X_train,X_test,y_train,y_test = train_test_split(
   stratify=y
 )
 
-print("\nTraining samles:",X_train.shape[0])
-print("Testing samples:",X_test.shape[0])
+print("\nTraining samples:", X_train.shape[0])
+print("Testing samples:", X_test.shape[0])
 
 #STEP 4:Define classification algorithms
 models = {
@@ -61,26 +62,26 @@ models = {
 #STEP 5:Define hyperparameter grids
 param_grids = {
   "Logistic Regression":{
-    "model__c":[0.1,1,10],
-    "model__solver":["liblinear"]
+    "model__C": [0.1, 1, 10],
+    "model__solver": ["liblinear"]
   },
-  "KNN":{
-    "model__n_neighbors":[3,5,7,9],
-    "model__weights":["uniform","distance"]
+  "KNN": {
+    "model__n_neighbors": [3, 5, 7, 9],
+    "model__weights": ["uniform", "distance"]
   },
-  "Decision Tree":{
-    "model__max_depth":[None,3,5,10],
-    "model__min_samples_split":[2,5,10]
+  "Decision Tree": {
+    "model__max_depth": [None, 3, 5, 10],
+    "model__min_samples_split": [2, 5, 10]
   },
-  "Rnadom Forest":{
-    "model__n_estimators":[100.200],
-    "model__max_depth":[None,5,10],
-    "model__min_samples_split":[2,5]
+  "Random Forest":{
+    "model__n_estimators": [100, 200],
+    "model__max_depth": [None, 5, 10],
+    "model__min_samples_split": [2, 5]
   },
-  "SVM":{
-    "model__c":[0.1,1,10],
-    "model__kernel":["linear","rbf"],
-    "model_gamma":["scale","auto"]
+  "SVM": {
+    "model__c": [0.1, 1, 10],
+    "model__kernel": ["linear", "rbf"],
+    "model_gamma": ["scale", "auto"]
   }
 }
 #STEP 6:Run GridSearchCV for every algorithm
@@ -88,44 +89,44 @@ param_grids = {
 results = []
 best_models = {}
 
-for model_name,model in models.items():
-  print("\n"+"="*60)
-  print("Running:",model_name)
-  print("="*60)
+for model_name, model in models.items():
+  print("\n" + "=" * 60)
+  print("Running:", model_name)
+  print("=" * 60)
   pipeline = Pipeline([
-    ("scaler',StandardScaler()),
-    ("model",model)
+    ("scaler", StandardScaler()),
+    ("model", model)
   ])
 grid_search = GridSearchCV(
-  estimators=pipeline,
+  estimator=pipeline,
   param_grid=param_grids[model_name],
   scoring="f1",
   cv=5,
   n_jobs=-1
 )
-grid_search.fit(X_train,y_train)
+grid_search.fit(X_train, y_train)
 best_models[model_name] = grid_search.best_estimator_
 results.append({
-  "Model":model_name,
-  "Best F1 Score":grid_search.best_score_,
-  "Best Parameters":grid_search.best_params_
+  "Model": model_name,
+  "Best F1 Score": grid_search.best_score_,
+  "Best Parameters": grid_search.best_params_
 })
 print("Best F1 Score:",
-      round(grid_search.best_score_,4))
+      round(grid_search.best_score_, 4))
 print("Best Parameters:",
       grid_search.best_params_)
 #STEP 7:COMPARE ALL MODELS
 results_df = pd.DataFrame(results)
-results_df = results_df_sort_values(
+results_df = results_df.sort_values(
   by="Best F1 Score",
   ascending=False
 )
-print("\n"+"="*60)
+print("\n" + "=" * 60)
 print("MODEL COMPARISON")
-print("="*60)
+print("=" * 60)
 print(
   results_df[
-    ["Model","Best F1 Score"]
+    ["Model", "Best F1 Score"]
   ].to_string(index=False)
 )
 #STEP 8:select the best model
@@ -134,7 +135,7 @@ best_model = best_models[best_model_name]
 best_cv_f1 = results_df.iloc[0]["Best F1 Score"]
 
 print("\nBest CV F1-score:")
-print(round(best_cv_f1,4))
+print(round(best_cv_f1, 4))
 
 #STEP 9:Evaluate on unseen test data
 
