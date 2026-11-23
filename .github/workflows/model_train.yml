@@ -16,7 +16,7 @@ jobs:
        run: |
          echo "Current directory:"
          pwd
-         echo: "Files in repository root:"
+         echo "Files in repository root:"
          ls -la
          echo "Searching for test_model.py:"
          find . -name "test_model.py"
