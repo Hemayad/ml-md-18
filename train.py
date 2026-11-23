@@ -27,7 +27,7 @@ X = pd.DataFrame(
   data.data,
   columns=data.feature_names
 )
-y = pd.Series(data.target,name="target")
+y = pd.Series(data.target, name="target")
 
 print("Dataset shape:", X.shape)
 print("\nFirst 5 rows:")
