@@ -81,7 +81,7 @@ param_grids = {
   "SVM": {
     "model__c": [0.1, 1, 10],
     "model__kernel": ["linear", "rbf"],
-    "model_gamma": ["scale", "auto"]
+    "model__gamma": ["scale", "auto"]
   }
 }
 #STEP 6:Run GridSearchCV for every algorithm
