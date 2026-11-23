@@ -131,3 +131,31 @@ print(
 #STEP 8:select the best model
 best_model_name = results_df.iloc[0]["Model"]
 best_model = best_models[best_model_name]
+best_cv_f1 = results_df.iloc[0]["Best F1 Score"]
+
+print("\nBest CV F1-score:")
+print(round(best_cv_f1,4))
+
+#STEP 9:Evaluate on unseen test data
+
+y_pred = best_model.predict(X_test)
+print("\n"+"=" * 60)
+print("FINAL MODEL EVALUATION")
+print("="*60)
+print("Accuracy:",accuracy_score(y_test,y_pred))
+print("F1 Score:",f1_score(y_test,y_pred))
+print("\nClassification Report:")
+print(
+   vclassification_report(
+      y_test,
+      y_pred,
+      target_names=data.target_names))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test.y_pred))
+
+#STEP 10:Save the best model
+joblib.dump(best_model,"best_model.joblib")
+
+print("\nBest model saved successfully!")
+print("Model:",best_model_name)
+
